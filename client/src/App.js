@@ -11,9 +11,9 @@ function App() {
   
     return (
       <Router>
-        <div className="container is-fluid" style={{ height: "100vh" }}>
+        <div className="container " style={{ height: "100vh" }}>
           <div className="notification">
-            
+           
             <h1
               className="title has-text-primary is-centered has-text-centered"
               style={{ marginTop: "30px" }}
