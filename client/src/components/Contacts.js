@@ -1,75 +1,95 @@
-import React from "react";
-import AddContact from "./AddContact";
 import { useState, useEffect } from "react";
+import Form from "./form";
 import ContactCard from "./ContactCard";
+import EditForm from "./EditForm";
 
+function Contacts() {
+  const [contacts, setContacts] = useState([]);
 
-const Contacts = () => {
-  const [contact, setContact] = useState([]);
-// api practice https://randomuser.me/api/?results=10
-  // get list of contact from DB
-  const getContacts = async () => {
-        const response = await fetch("http://localhost:4000/contacts");
-        const contact = await response.json();
-        setContact(contact);
-    };
+  // New state to check if we are working on editing a contact
+  const [editedContact, setEditedContact] = useState(null);
+
+  //A function to do the get request and set the state contacts
+  const loadContacts = () => {
+    fetch("http://localhost:4000/contacts")
+      .then((response) => response.json())
+      .then((contacts) => {
+        setContacts(contacts);
+      });
+  };
+
   useEffect(() => {
-    // fetch("http://localhost:4000/contacts")
-    //   .then((response) => response.json())
-    //   .then((contact) => {
-    //     setContact(contact);
-    //   });
-      // useEffect will run getContacts
-      // automatically upload new list every time I post
-      getContacts();
+    loadContacts();
   }, []);
 
-  // add contact
-// connected to add contact post request page
-    const addContact = async (newContact) => { 
-        setContact((contact) => [...contact, newContact]);      
-    };
-  
-  // DELETE contact
-const onDelete = async (id) => {
-    return fetch(`http://localhost:4000/contacts/${id}`, {
+  //A function to delete a contact
+  const deleteContact = (contact) => {
+    return fetch(`http://localhost:4000/contacts/${contact.id}`, {
       method: "DELETE",
     }).then((response) => {
-      console.log(response);
+      //console.log(response);
       if (response.ok) {
-        getContacts();
+        loadContacts();
       }
+    });
+  };
+
+  //A function to Edit a contact - PUT method
+  const updateContact = (existingContact) => {
+    return fetch(`http://localhost:4000/contacts/${existingContact.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(existingContact),
     })
-  
-    // await response.json();
-    // const newContact = contact.filter((contact) => contact.id !== id);
-    // setContact(newContact);
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("From put request ", data);
+        setContacts(data);
+        setEditedContact(null);
+      });
+  };
+
+  //A function to handle the post request
+  const postContact = (newContact) => {
+    return fetch("http://localhost:4000/contacts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newContact),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("From the post ", data); // this is all the contacts
+        setContacts(data);
+      });
   };
 
   return (
-    <React.Fragment>
-      {contact.map(contact=> (
+    <div className="contacts">
+      {editedContact ? (
+        <EditForm onUpdate={updateContact} editedContact={editedContact} />
+      ) : null}
+      {contacts.map((contact) => (
         <ContactCard
+          onEdit={(contact) => {
+            setEditedContact(contact);
+          }}
+          onDelete={deleteContact}
           contact={contact}
-          onDelete={onDelete}
           key={contact.id}
         />
       ))}
-    
-{/*       
-      <ul>
-        {contact.map((contact, index) => (
-          <li key={index}>
-                {contact.name}
-                {contact.email}
-                {contact.phone}
-                {contact.notes}
-          </li>
-        ))}
-          </ul> */}
-        <AddContact addContact={addContact} />
-    </React.Fragment>
+      <Form
+        saveContact={postContact}
+        setContacts={(contacts) => {
+          setContacts(contacts);
+        }}
+      />
+    </div>
   );
-};
+}
 
 export default Contacts;

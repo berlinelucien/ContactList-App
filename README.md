@@ -1,20 +1,57 @@
-### Your First Express and React App
-Create full stack apps with React and Express. Run your client, server and do a restart of your dump db to have a full-stack project working in minutes
+###Getting Started with Create React App
+This project was bootstrapped with Create React App.
 
-# Step by Step instructions - To use this project as your start point
-### For create the whole project
-1. Go to your source directory in your terminal and run the command `git clone https://github.com/Yosolita1978/React-Express-PairProgramming.git NAMENEWDIRECTORY`
-[!You will something like this in your terminal.](https://github.com/Yosolita1978/screenshoots/blob/main/template/Screen%20Shot%202022-03-20%20at%207.50.46%20PM.png?raw=true)
+###Available Scripts
+In the project directory, you can run:
 
-2. To restore the DB dump file that the project already contain, just run the command `psql -U postgres -f db.sql`. Make sure that you have your Postgres password on hand. The psql console will ask you for your password. 
-3. To clean your folder from the owner git, run the command `rm -rf .git`
-4. Run the command `git init` to start your git repository
-5. Go to the server folder in the project (`cd server`) and run the command `npm install`
-6. Inside your server folder, create an .env file with `touch .env`
-7. Inside your server folder, open the file `.env.example` and copy the file there. 
-8. Inside your .env file, paste the string from .env.example and change the variables with the values from the project. For this template, don't change the name of your db.
-9. Inside your server file: run the command `psql -U postgres -f db.sql` to restore the DB from the file db.sql
-10. Go to the cliente folder (`cd .. and cd client`) and run the command `npm start`
-11. Both server should run now with `npm start`
-12. Go to localhost:3000 and you should see something like this
-[!You will something like this in your terminal.](https://github.com/Yosolita1978/screenshoots/blob/main/template/Screen%20Shot%202022-03-20%20at%208.58.13%20PM.png?raw=true)# ContactList-App
+###npm start
+Runs the app in the development mode.
+Open http://localhost:3000 to view it in your browser.
+
+The page will reload when you make changes.
+You may also see any lint errors in the console.
+
+###npm test
+Launches the test runner in the interactive watch mode.
+See the section about running tests for more information.
+
+###npm run build
+Builds the app for production to the build folder.
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.
+Your app is ready to be deployed!
+
+See the section about deployment for more information.
+
+###npm run eject
+Note: this is a one-way operation. Once you eject, you can't go back!
+
+If you aren't satisfied with the build tool and configuration choices, you can eject at any time. This command will remove the single build dependency from your project.
+
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except eject will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+
+You don't have to ever use eject. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+
+Learn More
+You can learn more in the Create React App documentation.
+
+To learn React, check out the React documentation.
+
+Code Splitting
+This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+
+Analyzing the Bundle Size
+This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+
+Making a Progressive Web App
+This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+
+Advanced Configuration
+This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+
+Deployment
+This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+
+npm run build fails to minify
+This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
