@@ -1,102 +1,95 @@
-import React from "react";
-import AddContact from "./AddContact";
 import { useState, useEffect } from "react";
-import ContactCard from "./ContactCards";
+import Form from "./form";
+import ContactCard from "./ContactCard";
+import EditForm from "./EditForm";
 
-const Contacts = () => {
-  const [contact, setContact] = useState([]);
-  //const [editContactId, setEditContactId] = useState(null);
-  // api practice https://randomuser.me/api/?results=10
-  // get list of contact from DB
-  const getContacts = async () => {
-    const response = await fetch("http://localhost:4000/contacts");
-    const contact = await response.json();
+function Contacts() {
+  const [contacts, setContacts] = useState([]);
 
-    setContact(contact);
+  // New state to check if we are working on editing a contact
+  const [editedContact, setEditedContact] = useState(null);
+
+  //A function to do the get request and set the state contacts
+  const loadContacts = () => {
+    fetch("http://localhost:4000/contacts")
+      .then((response) => response.json())
+      .then((contacts) => {
+        setContacts(contacts);
+      });
   };
+
   useEffect(() => {
-    // fetch("http://localhost:4000/contacts")
-    //   .then((response) => response.json())
-    //   .then((contact) => {
-    //     setContact(contact);
-    //   });
-    // useEffect will run getContacts
-    // automatically upload new list every time I post
-    getContacts();
+    loadContacts();
   }, []);
 
-  // add contact
-  // connected to add contact post request page
-  const addContact = async (newContact) => {
-    setContact((contact) => [...contact, newContact]);
-  };
-  // const updateContact = (savedContact) => {
-  //   console.log("Line here savedStudent", savedContact);
-  //   setContact((contacts) => {
-  //     const newArrayContacts = [];
-  //     for (let contact of contacts) {
-  //       if (contact.id === savedContact.id) {
-  //         newArrayContacts.push(savedContact);
-  //       } else {
-  //         newArrayContacts.push(contact);
-  //       }
-  //     }
-  //     return newArrayContacts;
-  //   });
-  //   // this line is only to close the form
-  //   setEditContactId(null);
-  // };
-
-  // // edit function
-  // const onEdit = (contact) => {
-  //   console.log("This is line 26 on student component", contact);
-  //   const editingID = contact.id;
-  //   console.log("Just the student id", contact.id);
-  //   setEditContactId(editingID);
-  // };
-
-  // DELETE contact
-  const onDelete = async (id) => {
-    return fetch(`http://localhost:4000/contacts/${id}`, {
+  //A function to delete a contact
+  const deleteContact = (contact) => {
+    return fetch(`http://localhost:4000/contacts/${contact.id}`, {
       method: "DELETE",
     }).then((response) => {
-      const newList = contact.filter((contact) => contact.id !== id);
-      setContact(newList);
-      console.log(response);
-      // if (response.ok) {
-      //   getContacts();
-      // }
+      //console.log(response);
+      if (response.ok) {
+        loadContacts();
+      }
     });
+  };
 
-    // await response.json();
-    // const newContact = contact.filter((contact) => contact.id !== id);
-    // setContact(newContact);
+  //A function to Edit a contact - PUT method
+  const updateContact = (existingContact) => {
+    return fetch(`http://localhost:4000/contacts/${existingContact.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(existingContact),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("From put request ", data);
+        setContacts(data);
+        setEditedContact(null);
+      });
+  };
+
+  //A function to handle the post request
+  const postContact = (newContact) => {
+    return fetch("http://localhost:4000/contacts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newContact),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("From the post ", data); // this is all the contacts
+        setContacts(data);
+      });
   };
 
   return (
-    <React.Fragment>
-      {contact.map((contact) => (
+    <div className="contacts">
+      {editedContact ? (
+        <EditForm onUpdate={updateContact} editedContact={editedContact} />
+      ) : null}
+      {contacts.map((contact) => (
         <ContactCard
+          onEdit={(contact) => {
+            setEditedContact(contact);
+          }}
+          onDelete={deleteContact}
           contact={contact}
-          onDelete={onDelete}
-          key={contact.email}
+          key={contact.id}
         />
       ))}
-
-      {/*       
-      <ul>
-        {contact.map((contact, index) => (
-          <li key={index}>
-                {contact.name}
-                {contact.email}
-                {contact.phone}
-                {contact.notes}
-          </li>
-        ))}
-          </ul> */}
-      <AddContact addContact={addContact} />
-    </React.Fragment>
+      <Form
+        saveContact={postContact}
+        setContacts={(contacts) => {
+          setContacts(contacts);
+        }}
+      />
+    </div>
   );
-};
+}
 
 export default Contacts;
